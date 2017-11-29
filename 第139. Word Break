@@ -86,7 +86,7 @@ class Solution {
         
         boolean[] result = new boolean[s.length() + 1];
         result[0] = true;
-        for(int i = 1; i <= s.length(); i++){
+        for(int i = 1; i <= s.length(); i++){//注意是<=，因为s.substring(j,i)不包括i坐标的内容
             for(int j = 0; j < i; j++){
                 if(result[j] && wordDict.contains(s.substring(j, i))){
                     result[i] = true;
