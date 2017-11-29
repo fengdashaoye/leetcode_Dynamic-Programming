@@ -37,3 +37,66 @@ class Solution {
         
     }
 }
+
+经过修改+以前经验：过了21个案例
+代码：但是遇到这样的"ccbb"
+["bc","cb"]
+由于第一回删掉cb后剩下cb，同样还能匹配，输出true,但是不能这样，应该输出false。对于这种情况应该怎么处理。
+
+class Solution {
+    boolean result = false;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        if(s == null || s.length() <= 0){
+            return false;
+        }
+        boolean content = backtrack(s, wordDict);
+        return result;
+    }
+    public boolean backtrack(String s, List<String> wordDict){
+        //System.out.println(result);
+        //System.out.println(s.length());
+        if(s.length() <= 0){
+            return true;
+        }
+        
+        for(int i = 0; i < wordDict.size(); i++){
+            if(s.contains(wordDict.get(i))){
+                
+                result = result || backtrack(s.substring(0, s.indexOf(wordDict.get(i))) + s.substring(s.indexOf(wordDict.get(i)) + 
+                                                                                    wordDict.get(i).length(), s.length()), wordDict);
+                System.out.println(backtrack(s.substring(0, s.indexOf(wordDict.get(i))) + s.substring(s.indexOf(wordDict.get(i)) + 
+                                                                                    wordDict.get(i).length(), s.length()), wordDict));
+                System.out.println("result: " + result);
+            }
+        }
+        return false;
+        
+    }
+}
+
+别人的思路：
+两重循环，result[i]代表长度s.substring(0, i)可有wordDict组成。
+i不断往后跑，如果result[j]&&wordDict.contains(s.substring(j, i)) == true，这说明s.substring(0, j)可由wordDict组成,
+wordDict.contains(s.substring(j, i))又为true，所以设置result[i]=true，即s.substring(0, i)可由wordDict组成.
+如此不断一步步往后跑。
+
+class Solution {
+    boolean result = false;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        
+        boolean[] result = new boolean[s.length() + 1];
+        result[0] = true;
+        for(int i = 1; i <= s.length(); i++){
+            for(int j = 0; j < i; j++){
+                if(result[j] && wordDict.contains(s.substring(j, i))){
+                    result[i] = true;
+                    break;
+                }
+            }
+        }
+        return result[s.length()];
+    }
+    
+}
+
+
