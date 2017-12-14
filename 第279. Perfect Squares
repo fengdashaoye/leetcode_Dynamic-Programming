@@ -1,0 +1,53 @@
+Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+
+For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+
+思路：这是一道动态递归问题。
+dp[5]的值代表当n=5是返回的值。
+ dp[n] = Min{ dp[n - i*i] + 1 },  n - i*i >=0 && i >= 1
+        解释一下dp[n],因为dp[n] = Min{ dp[n - i*i] + 1 }，因为i*i是一个完美的数目，所以dp[n - i*i]，即dp[n] = dp[n - i*i] + 1(1即i*i这个数目)
+        这是一道动态规划的题目
+代码：
+class Solution {
+    public int numSquares(int n) {
+        /*
+        dp[0] = 0 
+        dp[1] = dp[0]+1 = 1
+        dp[2] = dp[1]+1 = 2
+        dp[3] = dp[2]+1 = 3
+        dp[4] = Min{ dp[4-1*1]+1, dp[4-2*2]+1 } 
+                = Min{ dp[3]+1, dp[0]+1 } 
+                = 1				
+        dp[5] = Min{ dp[5-1*1]+1, dp[5-2*2]+1 } 
+                = Min{ dp[4]+1, dp[1]+1 } 
+                = 2
+						.
+						.
+						.
+        dp[13] = Min{ dp[13-1*1]+1, dp[13-2*2]+1, dp[13-3*3]+1 } 
+                = Min{ dp[12]+1, dp[9]+1, dp[4]+1 } 
+                = 2
+						.
+						.
+						.
+        dp[n] = Min{ dp[n - i*i] + 1 },  n - i*i >=0 && i >= 1
+        解释一下dp[n],因为dp[n] = Min{ dp[n - i*i] + 1 }，因为i*i是一个完美的数目，所以dp[n - i*i]，即dp[n] = dp[n - i*i] + 1(1即i*i这个数目)
+        这是一道动态规划的题目
+        */
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);//数组填充
+        dp[0] = 0;
+        for(int i = 1; i <= n; i++){
+            int min = Integer.MAX_VALUE;//用于初始值迭代
+            int j = 1;
+            while(i - j*j >= 0){
+                min = Math.min(min, dp[i - j*j] + 1);//动态递归迭代
+                j++;
+            }
+            dp[i] = min;
+        }
+        return dp[n];
+        
+        
+    }
+}
