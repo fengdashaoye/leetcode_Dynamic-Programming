@@ -1,0 +1,68 @@
+Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+
+For example, given the following matrix:
+
+1 0 1 0 0
+1 0 1 1 1
+1 1 1 1 1
+1 0 0 1 0
+Return 4.
+
+思路：https://www.cnblogs.com/thoupin/p/4780352.html
+ret[i][j] = number,表示以i,j为右下角的正方形的边长为number，
+其递归方式为ret[i][j] = Math.min(Math.min(left, top), left_top) + 1;
+为左边、上边、左上边的number的最小值加1.注意是最小值，因为是正方形。
+如
+1 1
+1 number ，则number = 2; 相应坐标不为'0'
+如果：
+1 1 1
+1 2 number 则number也为 2，因为是正方形,相应坐标不为'0'
+如果
+2 2
+2 number ,则number 为3，相应坐标不为'0'
+上面其具体为
+1 1 1
+1 2 2
+1 2 number 所以只要number不为'0'，则number 为3,相应坐标不为'0'
+代码：
+class Solution {
+    public int maximalSquare(char[][] matrix) {
+        if(matrix == null || matrix.length == 0){
+            return 0;
+        }
+        int row = matrix.length;
+        int line = matrix[0].length;
+        
+        int[][] ret = new int[row][line];
+        //初始化第一行
+        int max = 0;//max为最大正方形的边长
+        for(int i = 0; i < line; i++){
+            ret[0][i] = matrix[0][i] - 48;//char转化成int
+            max = ret[0][i] > max ? ret[0][i] : max;
+        }
+        //初始化第一列
+        for(int i = 0; i < row; i++){
+            ret[i][0] = matrix[i][0] - 48;
+            max = ret[i][0] > max ? ret[i][0] : max;
+        }
+        
+        for(int i = 1; i < row; i++){
+            for(int j = 1; j < line; j++){
+                if(matrix[i][j] == '0'){
+                    ret[i][j] = 0;
+                }else{
+                    int left = ret[i][j - 1];
+                    int top = ret[i - 1][j];
+                    int left_top = ret[i - 1][j - 1];
+                    ret[i][j] = Math.min(Math.min(left, top), left_top) + 1;
+                }
+                max = ret[i][j] > max ? ret[i][j] : max;
+            }
+        }
+        return max * max;
+        
+        
+        
+    }
+}
