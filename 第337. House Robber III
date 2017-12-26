@@ -1,0 +1,56 @@
+The thief has found himself a new place for his thievery again. There is only one entrance to this area, called the "root." Besides the root,
+each house has one and only one parent house. After a tour, the smart thief realized that "all houses in this place forms a binary tree". 
+It will automatically contact the police if two directly-linked houses were broken into on the same night.
+
+Determine the maximum amount of money the thief can rob tonight without alerting the police.
+
+Example 1:
+     3
+    / \
+   2   3
+    \   \ 
+     3   1
+Maximum amount of money the thief can rob = 3 + 3 + 1 = 7.
+Example 2:
+     3
+    / \
+   4   5
+  / \   \ 
+ 1   3   1
+Maximum amount of money the thief can rob = 4 + 5 = 9.
+
+思路：这道题可以意会。首先肯定是从叶子节点开始，一步步往上。所以递归时采用的是后序遍历。左-右-根节点的顺序。
+对于每一个节点i，定义一个数组int[] rob,这代表以节点i为根节点，这棵子树为原型，小偷能偷到的最大值。rob[0]=代表偷该根节点的能偷到最大的值
+rob[1]=不偷该跟节点的能偷到最大的值。
+因此rob[0] = rob_left[1] + rob_right[1] + root.val;rob_left[1]代表以节点i的左孩子为根节点，不偷节点i的左孩子能偷到的最大值，
+rob_right[1]代表以节点i的右孩子为根节点，不偷节点i的右孩子能偷到的最大值。
+rob[1] = Math.max(rob_left[0], rob_left[1]) + Math.max(rob_right[0], rob_right[1]);
+因为不偷该节点i，那么就需要看其左右孩子，以其左右孩子为根节点的树，
+小偷能分别偷到的最大值为Math.max(rob_left[0], rob_left[1])和Math.max(rob_right[0], rob_right[1])
+代码：
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode(int x) { val = x; }
+ * }
+ */
+class Solution {
+    public int rob(TreeNode root) {//从各个叶子节点开始往根节点看
+        int[] result = dps(root);
+        return Math.max(result[0], result[1]);
+    }
+    public int[] dps(TreeNode root){
+        int[] rob = new int[2];//rob[0]代表抢，rob[1]代表不抢
+        if(root != null){
+            int[] rob_left = dps(root.left);
+            int[] rob_right = dps(root.right);
+            rob[0] = rob_left[1] + rob_right[1] + root.val;//抢当前节点，则孩子节点不能抢
+            rob[1] = Math.max(rob_left[0], rob_left[1]) + Math.max(rob_right[0], rob_right[1]);//不抢当前节点，则对于孩子节点，可抢可不抢，看最大值
+        }
+        return rob;
+        
+    }
+}
