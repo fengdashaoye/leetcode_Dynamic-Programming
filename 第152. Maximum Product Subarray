@@ -16,6 +16,21 @@ result视情况更新。
 二重比较，之前没有见到过。。。
 这是我见过得写的比较好的代码。
 
+result为全局的最大值
+当i等于a时，max代表以i为终点，从0至i中连续子序列的最大值，min代表以i为终点，从0至i中连续子序列的最小值
+max和min中所意味的子序列可能以a为终点。
+
+所以当i等与a + 1时，若想找从0-a+1中子序列的最大值和最小值，
+当i = a + 1时
+temp = max
+max = Math.max(Math.max(nums[i] * max, nums[i] * min), nums[i]),这段意思是首先将之前的子序列最大值和最小值分别乘以nums[i]，因为nums[i]
+可能正数，可能负数，也可能为0，所以此时max所带表的子序列为....a,a+1.然后将这段子序列的值与nums[i]比较。找出最大值，因为nums[i]可能为0.
+min类似
+
+max，min所代表的子序列的终点势必会一步步往后移动，但他们不代表全局最大。。。
+
+最后max要与result相比较。
+
 代码：
 class Solution {
     public int maxProduct(int[] nums) {
