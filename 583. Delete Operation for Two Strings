@@ -1,0 +1,48 @@
+Given two words word1 and word2, find the minimum number of steps required to make word1 and word2 the same, where in each step you can delete one character in either string.
+
+Example 1:
+Input: "sea", "eat"
+Output: 2
+Explanation: You need one step to make "sea" to "ea" and another step to make "eat" to "ea".
+Note:
+The length of given words won't exceed 500.
+Characters in given words can only be lower-case letters.
+
+这道题其实可以转换成两个字符串的最长公共子序列（非公共连续子串）
+https://www.cnblogs.com/hapjin/p/5572483.html
+设置二维数组 int[][]content
+content[i][j]代表最长公共子序列的最后一个字符为word1的i坐标和word2的j坐标
+如果word1.charAt(i) == word2.charAt(j)
+则content[i][j] == content[i-1][j-1] + 1
+如果不相等,则需要比较word1的i-1坐标和word2的j坐标  以及word1的i坐标和word2的j-1坐标
+则content[i][j] == max(content[i-1][j], content[i][j-1])
+因为content[i-1][j]，content[i][j-1]也是代表子序列
+
+代码：
+class Solution {
+    public int minDistance(String word1, String word2) {
+        if(word1.length() == 0){
+            return word2.length();
+        }
+        if(word2.length() == 0){
+            return word1.length();
+        }
+        int[][] content = new int[word1.length() + 1][word2.length() + 1];
+        //长度放到+1，对后续比较好操作，因为都是-1
+        for(int i = 1; i <= word1.length(); i++){
+            for(int j = 1; j <= word2.length(); j++){
+                if(word1.charAt(i - 1) == word2.charAt(j - 1)){
+                    content[i][j] = content[i - 1][j - 1] + 1;
+                }else{
+                    if(content[i - 1][j] > content[i][j - 1]){
+                        content[i][j] = content[i - 1][j];
+                    }else{
+                        content[i][j] = content[i][j - 1];
+                    }
+                }
+            }
+        }
+        return word1.length() + word2.length() - 2 * content[word1.length()][word2.length()];
+        
+    }
+}
